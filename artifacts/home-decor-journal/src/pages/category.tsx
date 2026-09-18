@@ -1,7 +1,7 @@
 import { ArrowLeft, SlidersHorizontal } from 'lucide-react';
 import { Link, useParams } from 'wouter';
 import { useListCategories, useListPosts } from '@workspace/api-client-react';
-import { EmptyState, LoadingBlocks, PageShell, PostCard } from '@/components/journal-ui';
+import { categoryHref, EmptyState, LoadingBlocks, PageShell, PostCard } from '@/components/journal-ui';
 
 export default function CategoryPage() {
   const { category = '' } = useParams<{ category: string }>();
@@ -21,7 +21,7 @@ export default function CategoryPage() {
         <div className="mt-12 flex flex-wrap items-center gap-2 border-y border-border py-4">
           <SlidersHorizontal size={15} className="mr-2 text-primary" />
           <span className="mr-3 font-mono text-[10px] uppercase tracking-[.18em] text-muted-foreground">Explore:</span>
-          {categoriesQuery.data?.map((item) => <Link key={item.name} href={`/category/${item.name}`} data-testid={`link-category-filter-${item.name}`} className={`border px-3 py-2 text-xs transition ${item.name === decoded ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary hover:text-primary'}`}>{item.name}</Link>)}
+          {categoriesQuery.data?.map((item) => <Link key={item.name} href={categoryHref(item.name)} data-testid={`link-category-filter-${item.name}`} className={`border px-3 py-2 text-xs transition ${item.name === decoded ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary hover:text-primary'}`}>{item.name}</Link>)}
         </div>
         {postsQuery.isLoading ? <div className="mt-12"><LoadingBlocks count={3} /></div> : posts.length ? <div className="mt-12 grid gap-x-5 gap-y-12 md:grid-cols-2 lg:grid-cols-3">{posts.map((post, index) => <div key={post.id} className={`reveal reveal-${Math.min(index + 1, 4)}`}><PostCard post={post} /></div>)}</div> : <div className="mt-12"><EmptyState title="A quiet corner" body={`We haven't filed any stories under ${decoded} yet. Try another category or return to the journal.`} /></div>}
       </main>

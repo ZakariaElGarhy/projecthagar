@@ -45,11 +45,11 @@ export default function PostDetailPage() {
           </div>
         </section>
         <section className="mx-auto mt-20 max-w-[980px] px-5 lg:px-10">
-          <div className="mb-8 border-b border-border pb-4"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-primary">The considered edit</p><h2 className="mt-2 font-display text-4xl">Shop the feeling</h2></div>
+          <div className="mb-8 border-b border-border pb-4"><p className="font-mono text-[10px] uppercase tracking-[.18em] text-primary">The considered edit</p><h2 className="mt-2 font-display text-4xl">Shop the materials</h2><p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Every find includes its primary material and a direct shopping link, so the edit is useful beyond the mood board.</p></div>
           <div className="grid gap-4 sm:grid-cols-2">
             {post.products.map((product, index) => <article key={`${product.name}-${index}`} data-testid={`card-product-${index}`} className="group grid grid-cols-[112px_1fr] gap-4 border border-border bg-card p-3 transition hover:border-primary">
               <div className="overflow-hidden bg-muted"><img src={product.image || fallbackImages[index % fallbackImages.length]} alt={product.name} className="h-28 w-full object-cover transition group-hover:scale-105" /></div>
-              <div className="flex min-w-0 flex-col justify-between py-1"><div><h3 data-testid={`text-product-name-${index}`} className="font-display text-xl leading-tight">{product.name}</h3><p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{product.description}</p></div><a href={product.amazon_link} target="_blank" rel="noreferrer" data-testid={`link-product-shop-${index}`} className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[.14em] text-primary">See the source <ExternalLink size={12} /></a></div>
+              <div className="flex min-w-0 flex-col justify-between py-1"><div><h3 data-testid={`text-product-name-${index}`} className="font-display text-xl leading-tight">{product.name}</h3><p data-testid={`text-product-material-${index}`} className="mt-1 font-mono text-[9px] uppercase tracking-[.13em] text-primary">{product.material}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">{product.description}</p></div><a href={product.amazon_link} target="_blank" rel="noreferrer" data-testid={`link-product-shop-${index}`} className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[.14em] text-primary">Shop this piece <ExternalLink size={12} /></a></div>
             </article>)}
           </div>
         </section>

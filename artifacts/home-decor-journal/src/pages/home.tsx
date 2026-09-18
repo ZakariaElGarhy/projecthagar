@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { ArrowRight, Search, Sparkles } from 'lucide-react';
 import { Link } from 'wouter';
 import { useListCategories, useListPosts } from '@workspace/api-client-react';
-import { CategoryCard, EmptyState, LoadingBlocks, PageShell, PostCard } from '@/components/journal-ui';
+import { CategoryCard, categoryHref, EmptyState, LoadingBlocks, PageShell, PostCard } from '@/components/journal-ui';
 
 export default function HomePage() {
   const [search, setSearch] = useState(() => new URLSearchParams(window.location.search).get('search') ?? '');
@@ -51,7 +51,7 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center gap-3">
               <Sparkles size={16} className="text-primary" />
               <span className="font-mono text-[10px] uppercase tracking-[.18em] text-muted-foreground">Currently considering</span>
-              {categoriesQuery.data?.slice(0, 3).map((category) => <Link key={category.name} href={`/category/${category.name}`} data-testid={`link-featured-category-${category.name}`} className="border border-border px-3 py-2 text-xs font-semibold transition hover:border-primary hover:text-primary">{category.name}</Link>)}
+              {categoriesQuery.data?.slice(0, 3).map((category) => <Link key={category.name} href={categoryHref(category.name)} data-testid={`link-featured-category-${category.name}`} className="border border-border px-3 py-2 text-xs font-semibold transition hover:border-primary hover:text-primary">{category.name}</Link>)}
             </div>
             <form onSubmit={submitSearch} className="flex items-center border-b border-foreground pb-2">
               <Search size={16} />

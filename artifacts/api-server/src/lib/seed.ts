@@ -30,42 +30,90 @@ const topics = [
   ["The Art of the Empty Wall", "Decor & Pillows", "Leaving a wall quiet can be a design decision, not a gap to fill. Here is how to let the architecture do some of the talking.", "6f8790"],
 ] as const;
 
+const realProducts = [
+  {
+    name: "KALLAX shelf unit, white, 30 1/8x57 5/8 in",
+    material: "Fibreboard and particleboard with paper foil",
+    image: images[2],
+    description: "An open storage unit that keeps books, baskets, and everyday objects visible without making a small room feel busy.",
+    amazon_link: "https://www.ikea.com/us/en/p/kallax-shelf-unit-white-80275887",
+  },
+  {
+    name: "POÄNG armchair, birch veneer/Hillared beige",
+    material: "Layer-glued birch veneer and polyester fabric",
+    image: images[0],
+    description: "A real IKEA classic with a curved bentwood frame and a generous seat for reading, resting, or pulling into conversation.",
+    amazon_link: "https://www.ikea.com/us/en/p/poaeng-armchair-birch-veneer-hillared-beige-s19305925",
+  },
+  {
+    name: "RÅSKOG utility cart, gray-green",
+    material: "Powder-coated steel",
+    image: images[5],
+    description: "A compact rolling cart that adds useful storage beside a sofa, desk, or kitchen counter without claiming much floor space.",
+    amazon_link: "https://www.ikea.com/us/en/p/raskog-utility-cart-gray-green-50591769",
+  },
+  {
+    name: "STOENSE rug, low pile, off-white",
+    material: "Polypropylene pile with synthetic rubber backing",
+    image: images[4],
+    description: "A soft low-pile base that quietly gathers the furniture and makes a compact sitting area feel deliberate.",
+    amazon_link: "https://www.ikea.com/us/en/p/stoense-rug-low-pile-off-white-20635449",
+  },
+] as const;
+
 function makeProducts(imageIndex: number, subject: string) {
-  return [
-    {
-      name: `${subject} Textured Throw`,
-      image: images[imageIndex % images.length],
-      description: "A tactile layer that brings an easy, lived-in finish without overwhelming the room.",
-      amazon_link: "https://www.amazon.com/",
-    },
-    {
-      name: `Hand-finished ${subject} Accent`,
-      image: images[(imageIndex + 2) % images.length],
-      description: "A quietly useful piece with enough texture and shape to hold its own in the composition.",
-      amazon_link: "https://www.amazon.com/",
-    },
-    {
-      name: `Natural Form ${subject} Essential`,
-      image: images[(imageIndex + 4) % images.length],
-      description: "A warm, flexible staple chosen to make everyday routines feel a little more intentional.",
-      amazon_link: "https://www.amazon.com/",
-    },
-  ];
+  return [0, 1, 2].map((offset) => {
+    const product = realProducts[(imageIndex + offset) % realProducts.length];
+    return {
+      ...product,
+      description: `${product.description} A considered ${subject.toLowerCase()} find chosen for rooms that need to work hard and still feel good.`,
+    };
+  });
 }
 
 export async function seedPosts(): Promise<void> {
-  const existing = await db.select({ id: postsTable.id }).from(postsTable).limit(1);
-  if (existing.length > 0) return;
-  await db.insert(postsTable).values(
-    topics.map(([title, category, introText, accentColor], index) => ({
-      title,
-      slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-      category,
-      accentColor,
-      introText,
-      coverImage: images[index % images.length],
-      products: makeProducts(index, category),
-      conclusionText: "The goal is not to make a room look finished. It is to make it feel like it has been gently lived in, with pieces that support the way you move through your days.",
-    })),
-  );
+  const existing = await db.select().from(postsTable);
+  if (existing.length === 0) {
+    await db.insert(postsTable).values(
+      topics.map(([title, category, introText, accentColor], index) => ({
+        title,
+        slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+        category: category === "Living Room" ? "Living Rooms" : category,
+        accentColor,
+        introText,
+        coverImage: images[index % images.length],
+        products: makeProducts(index, category),
+        conclusionText: "The goal is not to make a room look finished. It is to make it feel like it has been gently lived in, with pieces that support the way you move through your days.",
+      })),
+    );
+  }
+
+  const smallSpacesSlug = "small-space-real-life-an-ikea-edit-for-the-living-room";
+  const hasSmallSpacesPost = existing.some((post) => post.slug === smallSpacesSlug);
+  if (!hasSmallSpacesPost) {
+    await db.insert(postsTable).values({
+      title: "Small Space, Real Life: An IKEA Edit for the Living Room",
+      slug: smallSpacesSlug,
+      category: "Small Spaces",
+      accentColor: "d8a33e",
+      introText: "A small living room does not need fewer ideas. It needs pieces that earn their footprint, from the real KALLAX shelf unit that carries storage vertically to the POÄNG armchair that gives one corner a proper purpose.",
+      coverImage: images[1],
+      products: [...realProducts],
+      conclusionText: "These are real, currently listed IKEA pieces, but the larger lesson is about editing: choose storage that goes up, seating that can move, and a rug that makes the whole room feel like one place. Small is not a limitation when every material and object has a job.",
+    });
+  }
+
+  for (const [index, [title, category]] of topics.entries()) {
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const post = existing.find((item) => item.slug === slug);
+    if (!post) continue;
+    const shouldRefresh = post.products.some((product) => product.amazon_link === "https://www.amazon.com/");
+    const nextCategory = category === "Living Room" ? "Living Rooms" : category;
+    if (shouldRefresh || post.category !== nextCategory) {
+      await db.update(postsTable).set({
+        category: nextCategory,
+        products: makeProducts(index, category),
+      }).where(eq(postsTable.id, post.id));
+    }
+  }
 }

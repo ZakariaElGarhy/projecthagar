@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 export const productSchema = z.object({
   name: z.string(),
+  material: z.string(),
   image: z.string(),
   description: z.string(),
   amazon_link: z.string(),

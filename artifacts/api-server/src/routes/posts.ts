@@ -20,6 +20,13 @@ import { getSessionUser } from "../lib/auth";
 const router: IRouter = Router();
 
 function toApiPost(post: typeof postsTable.$inferSelect) {
+  const products = (post.products as Array<Record<string, unknown>>).map((product) => ({
+    name: String(product.name ?? ""),
+    material: String(product.material ?? "Mixed materials"),
+    image: String(product.image ?? ""),
+    description: String(product.description ?? ""),
+    amazon_link: String(product.amazon_link ?? ""),
+  }));
   return {
     id: post.id,
     title: post.title,
@@ -28,7 +35,7 @@ function toApiPost(post: typeof postsTable.$inferSelect) {
     accent_color: post.accentColor,
     intro_text: post.introText,
     cover_image: post.coverImage,
-    products: post.products,
+    products,
     conclusion_text: post.conclusionText,
     created_at: post.createdAt.toISOString(),
   };
@@ -73,7 +80,9 @@ router.get("/posts", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const { category, search, featured } = parsed.data;
+  const { search, featured } = parsed.data;
+  const category =
+    parsed.data.category === "Living Room" ? "Living Rooms" : parsed.data.category;
   const conditions = [];
   if (category) conditions.push(eq(postsTable.category, category));
   if (search) {

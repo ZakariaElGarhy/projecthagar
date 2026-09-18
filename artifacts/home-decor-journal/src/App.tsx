@@ -10,6 +10,7 @@ import CategoryPage from '@/pages/category';
 import PostDetailPage from '@/pages/post-detail';
 import LoginPage from '@/pages/login';
 import DashboardPage from '@/pages/dashboard';
+import MaterialsPage from '@/pages/materials';
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function Router() {
         <Route path="/post/:slug" component={PostDetailPage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/dashboard" component={DashboardPage} />
+        <Route path="/materials" component={MaterialsPage} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>

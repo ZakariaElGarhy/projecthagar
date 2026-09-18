@@ -243,13 +243,15 @@ components:
       properties:
         name:
           type: string
+        material:
+          type: string
         image:
           type: string
         description:
           type: string
         amazon_link:
           type: string
-      required: [name, image, description, amazon_link]
+      required: [name, material, image, description, amazon_link]
     Post:
       type: object
       properties:

@@ -36,6 +36,7 @@ export const ListPostsResponseItem = zod.object({
   "cover_image": zod.string(),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()
@@ -68,6 +69,7 @@ export const CreatePostBody = zod.object({
   "cover_image": zod.string().min(1),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()
@@ -85,6 +87,7 @@ export const CreatePostResponse = zod.object({
   "cover_image": zod.string(),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()
@@ -120,6 +123,7 @@ export const UpdatePostBody = zod.object({
   "cover_image": zod.string().min(1).optional(),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()
@@ -137,6 +141,7 @@ export const UpdatePostResponse = zod.object({
   "cover_image": zod.string(),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()
@@ -173,6 +178,7 @@ export const GetPostBySlugResponse = zod.object({
   "cover_image": zod.string(),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()
@@ -242,6 +248,7 @@ export const GetDashboardSummaryResponse = zod.object({
   "cover_image": zod.string(),
   "products": zod.array(zod.object({
   "name": zod.string(),
+  "material": zod.string(),
   "image": zod.string(),
   "description": zod.string(),
   "amazon_link": zod.string()

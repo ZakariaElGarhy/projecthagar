@@ -14,6 +14,10 @@ export const fallbackImages = [
   makeEditorialImage('#7d8791', '#f2ddc5', 'objects with a history'),
 ];
 
+export function categoryHref(category: string) {
+  return `/category/${encodeURIComponent(category)}`;
+}
+
 export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const [dark, setDark] = useState(false);
 
@@ -73,9 +77,9 @@ export function SiteHeader() {
         <BrandMark />
         <nav className="hidden items-center gap-7 text-[11px] font-bold uppercase tracking-[.18em] md:flex">
           <Link href="/" data-testid="link-nav-home" className={`${location === '/' ? 'text-primary' : 'text-muted-foreground'} transition hover:text-primary`}>Journal</Link>
-          <Link href="/category/Living Rooms" data-testid="link-nav-living-rooms" className="text-muted-foreground transition hover:text-primary">Rooms</Link>
-          <Link href="/category/Small Spaces" data-testid="link-nav-small-spaces" className="text-muted-foreground transition hover:text-primary">Small spaces</Link>
-          <Link href="/category/Color" data-testid="link-nav-color" className="text-muted-foreground transition hover:text-primary">Color notes</Link>
+          <Link href={categoryHref('Living Rooms')} data-testid="link-nav-living-rooms" className="text-muted-foreground transition hover:text-primary">Rooms</Link>
+          <Link href={categoryHref('Small Spaces')} data-testid="link-nav-small-spaces" className="text-muted-foreground transition hover:text-primary">Small spaces</Link>
+          <Link href="/materials" data-testid="link-nav-materials" className="text-muted-foreground transition hover:text-primary">Materials</Link>
         </nav>
         <div className="flex items-center gap-2">
           <form onSubmit={submitSearch} className="hidden items-center border-b border-border px-1 py-1 sm:flex">
@@ -112,8 +116,9 @@ export function PageShell({ children }: { children: ReactNode }) {
             <p className="font-mono text-[10px] uppercase tracking-[.2em] text-accent">Explore</p>
             <div className="mt-4 grid gap-2 text-sm text-secondary-foreground/80">
               <Link href="/" data-testid="link-footer-journal" className="hover:text-accent">The journal</Link>
-              <Link href="/category/Living Rooms" data-testid="link-footer-living" className="hover:text-accent">Living rooms</Link>
-              <Link href="/category/Small Spaces" data-testid="link-footer-small-spaces" className="hover:text-accent">Small spaces</Link>
+              <Link href={categoryHref('Living Rooms')} data-testid="link-footer-living" className="hover:text-accent">Living rooms</Link>
+              <Link href={categoryHref('Small Spaces')} data-testid="link-footer-small-spaces" className="hover:text-accent">Small spaces</Link>
+              <Link href="/materials" data-testid="link-footer-materials" className="hover:text-accent">Materials</Link>
             </div>
           </div>
           <div>
@@ -155,7 +160,7 @@ export function PostCard({ post, featured = false }: { post: Post; featured?: bo
 
 export function CategoryCard({ category, index }: { category: Category; index: number }) {
   return (
-    <Link href={`/category/${category.name}`} data-testid={`card-category-${index}`} className="group relative min-h-[220px] overflow-hidden bg-secondary text-secondary-foreground">
+    <Link href={categoryHref(category.name)} data-testid={`card-category-${index}`} className="group relative min-h-[220px] overflow-hidden bg-secondary text-secondary-foreground">
       <img src={category.image || fallbackImages[index % fallbackImages.length]} alt={category.name} className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-multiply transition duration-500 group-hover:scale-105 group-hover:opacity-75 dark:mix-blend-normal" />
       <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-5">

@@ -8,6 +8,7 @@
 
 export interface Product {
   name: string;
+  material: string;
   image: string;
   description: string;
   amazon_link: string;
