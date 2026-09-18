@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Home Decor Journal"
+description = "A photo-led home decor journal with browsable inspiration, structured product guides, theme switching, and a protected editor dashboard for managing posts."
+version = "1.0.0"
+id = "artifacts/home-decor-journal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25609
+
+[services.development]
+run = "pnpm --filter @workspace/home-decor-journal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/home-decor-journal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/home-decor-journal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25609"
+BASE_PATH = "/"

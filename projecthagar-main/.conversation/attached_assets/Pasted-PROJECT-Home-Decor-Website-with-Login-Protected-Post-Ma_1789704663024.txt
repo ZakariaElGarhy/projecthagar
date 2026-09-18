@@ -1,0 +1,47 @@
+PROJECT: Home Decor Website with Login-Protected Post Management, Dark/Light Mode
+
+Style reference (visual inspiration only — do not copy code, text, or images):
+https://cozyneststyle.com/
+https://moonlit-home-decor.com/
+
+Tech stack:
+Frontend: plain HTML, CSS, and vanilla JavaScript — no frameworks. Backend: minimal Node.js + Express (or PHP if simpler for hosting) with a small database (SQLite or MySQL) just for login auth and storing/retrieving posts. Frontend talks to backend via simple fetch() calls to a small API. Keep the code clean, well-commented, and organized into clearly separated files so someone learning web dev can read and edit it.
+
+Dark/Light mode:
+A toggle button (sun/moon icon) in the header, present on every page. Store the user's choice in localStorage so it persists across visits. Use CSS variables for all colors (background, text, cards, accents) so switching themes just swaps variable values — no separate stylesheets needed. Both themes should look intentional and polished, not just an inverted default.
+
+Pages:
+
+Landing page (index.html) — striking modern hero section, featured posts grid, category tiles, smooth hover/scroll effects, premium photography-driven layout. Top priority for styling quality.
+Category pages — grid of posts filtered by category (Furniture, Lighting, Bedroom, Living Room, Kitchen, Outdoor, Organization, Rugs, Decor & Pillows), loaded dynamically via JS from the backend.
+Individual post pages — see structured template below.
+Login page (login.html) — username/password form, session-based auth, redirects to dashboard on success.
+Dashboard (login-protected) — list of posts with Edit/Delete, "Add New Post" form matching the structured template fields below.
+
+Post template structure (every blog post follows this):
+Each post must be built from distinct sections, not just one content blob:
+
+Intro section — unique opening text introducing the topic/style, with its own accent color scheme for that post (e.g. each post can have a slightly different accent color pulled from a curated palette, so posts feel visually distinct from one another while staying on-brand)
+Materials/Products section — a styled list or card grid of the specific items featured in the post (product name, image, short description)
+Amazon links section — each featured product includes a clearly styled "Shop on Amazon" button/link (affiliate link field, editable per product in the dashboard)
+Conclusion section — closing summary text wrapping up the post
+
+Data model for posts should support: title, slug, category, accent_color, intro_text, cover_image, products (array of {name, image, description, amazon_link}), conclusion_text, created_at.
+
+Initial content:
+Generate ~15 AI-written sample posts using the full template above (intro, 3-5 products with placeholder Amazon links, conclusion), matching the tone/style of the reference sites.
+
+Backend responsibilities (minimal):
+
+Single admin user table (hashed password)
+Posts table (supporting the structured fields above — products can be a JSON column if using SQL)
+Session-based auth protecting dashboard/API routes
+Parameterized queries only (no raw SQL concatenation)
+
+Design requirements:
+Fully responsive, mobile-first, fast-loading optimized images, clean modern typography, dark/light mode fully supported on every page including the dashboard.
+
+Hosting note:
+Target Hostinger. If Node/Express backend, requires Hostinger's Node-supported/VPS plan. If shared hosting only, use a PHP backend instead while keeping frontend markup/styling in plain HTML/CSS/JS.
+
+Deliverable: Full project source code (frontend + minimal backend + DB setup file), clean and well-commented for someone learning web development to read, edit, and extend. Include a short README explaining file structure and how to run it locally.
