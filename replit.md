@@ -1,6 +1,6 @@
-# [Project name]
+# Home Decor Journal
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A photo-led home decor journal with public inspiration pages and a protected admin publishing dashboard.
 
 ## Run & Operate
 
@@ -22,23 +22,31 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/home-decor-journal/src/` — React/Vite frontend, routes, editorial UI, and theme system
+- `artifacts/api-server/src/routes/` — Express API routes for posts, categories, auth, and dashboard summaries
+- `lib/api-spec/openapi.yaml` — source of truth for the API contract
+- `lib/db/src/schema/posts.ts` — Drizzle schema for posts, admin users, and sessions
+- `artifacts/home-decor-journal/README.md` — local run notes and demo login
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The frontend uses generated Orval hooks from `@workspace/api-client-react`; API changes must start in OpenAPI and be followed by codegen.
+- Sessions use signed, httpOnly cookies backed by the PostgreSQL `sessions` table.
+- The first API boot creates the demo admin and seeds 15 editorial posts when the database is empty.
+- Cover and product imagery is stored as remote image URLs; the database stores only post metadata and product JSON.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Readers can browse a magazine-like home page, filter by room/category, search the journal, open structured post guides, shop featured products, switch light/dark mode, and share or save stories. Editors can log in, review summaries, create posts, edit product lists, and delete posts.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+The user requested plain-language, learner-friendly source structure and a premium photography-driven home decor editorial experience with polished light and dark themes.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Run `pnpm --filter @workspace/api-spec run codegen` after changing `lib/api-spec/openapi.yaml`.
+- The API workflow must have `SESSION_SECRET`; `ADMIN_USERNAME` and `ADMIN_PASSWORD` may override the demo admin credentials.
 
 ## Pointers
 
