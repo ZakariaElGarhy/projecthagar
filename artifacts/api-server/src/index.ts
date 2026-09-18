@@ -3,22 +3,30 @@ import { logger } from "./lib/logger";
 import { ensureAdminUser } from "./lib/auth";
 import { seedPosts } from "./lib/seed";
 
-const rawPort = process.env["PORT"];
+// Run one-time setup (admin user + seed data) on both local and serverless cold starts.
+const setupPromise = Promise.all([ensureAdminUser(), seedPosts()]).catch((err: unknown) => {
+  logger.error({ err }, "Failed to initialize database");
+});
 
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
-}
+// On Vercel, we never call app.listen() — Vercel's Node runtime invokes
+// the exported handler directly per-request. Locally (and on Railway/Render/etc),
+// process.env.VERCEL is not set, so we start a normal persistent server.
+if (!process.env["VERCEL"]) {
+  const rawPort = process.env["PORT"];
 
-const port = Number(rawPort);
+  if (!rawPort) {
+    throw new Error(
+      "PORT environment variable is required but was not provided.",
+    );
+  }
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
+  const port = Number(rawPort);
 
-Promise.all([ensureAdminUser(), seedPosts()])
-  .then(() => {
+  if (Number.isNaN(port) || port <= 0) {
+    throw new Error(`Invalid PORT value: "${rawPort}"`);
+  }
+
+  setupPromise.then(() => {
     app.listen(port, (err) => {
       if (err) {
         logger.error({ err }, "Error listening on port");
@@ -27,8 +35,7 @@ Promise.all([ensureAdminUser(), seedPosts()])
 
       logger.info({ port }, "Server listening");
     });
-  })
-  .catch((err: unknown) => {
-    logger.error({ err }, "Failed to initialize database");
-    process.exit(1);
   });
+}
+
+export default app;
